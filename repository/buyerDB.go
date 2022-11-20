@@ -16,25 +16,28 @@ func NewBuyerRepositoryDB(db *gorm.DB) BuyerRepoitory {
 
 func (r buyerRepo) GetBuyers() (b []Buyer_order, err error) {
 	err = r.db.Limit(10).Find(&b).Error
+	if err != nil {
+		return nil, err
+	}
 	return b, err
 }
 
-func (r buyerRepo) GetBuyerById(id int) (b Buyer_order, err error) {
+func (r buyerRepo) GetBuyerById(id int) (b *Buyer_order, err error) {
 	tx := r.db.Find(&b, "order_id", id)
-	if tx.Error != nil {
-		return b, err
+	if tx.Error != nil || tx.RowsAffected == 0 {
+		return nil, err
 	}
 	return b, nil
 }
 
 func (r buyerRepo) CreateBuyer(buyer Buyer_order) (b Buyer_order, err error) {
 	tx := r.db.Create(&buyer)
-	b = buyer
 	if tx.Error != nil {
 		logs.Error(err)
 		return b, tx.Error
 	}
-	return b, nil
+
+	return buyer, nil
 }
 
 func (r buyerRepo) UpdateBuyer(id int, name string, status int, date string, active string) (b Buyer_order, err error) {

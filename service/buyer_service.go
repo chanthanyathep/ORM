@@ -33,12 +33,12 @@ func (s buyerServiceDB) GetBuyers() (buyer []Buyer_order, err error) {
 	return buyer, nil
 }
 
-func (s buyerServiceDB) GetBuyerById(id int) (b Buyer_order, err error) {
+func (s buyerServiceDB) GetBuyerById(id int) (b *Buyer_order, err error) {
 	buyer, err := s.buyerRepo.GetBuyerById(id)
-	if err != nil {
-		return b, err
+	if err != nil || buyer == nil {
+		return nil, err
 	}
-	b = Buyer_order{
+	b = &Buyer_order{
 		Order_id:     buyer.Order_id,
 		Buyer_name:   buyer.Buyer_name,
 		Order_status: buyer.Order_status,
