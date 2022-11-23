@@ -12,7 +12,7 @@ type BuyerRepoitory interface {
 	GetBuyers() ([]Buyer_order, error)
 	GetBuyerById(id int) (b *Buyer_order, err error)
 	CreateBuyer(buyer Buyer_order) (b Buyer_order, err error)
-	UpdateBuyer(id int, name string, status int, date string, active string) (b Buyer_order, err error)
+	UpdateBuyer(id int, name string, status int, date string, active string) (b *Buyer_order, err error)
 	DeleteBuyer(id int) error
 }
 

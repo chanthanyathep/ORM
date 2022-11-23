@@ -56,22 +56,28 @@ func (s buyerServiceDB) CreateBuyer(buyer Buyer_order) (b Buyer_order, err error
 		Order_date:   buyer.Order_date,
 		Is_active:    buyer.Is_active,
 	}
-	_, err = s.buyerRepo.CreateBuyer(buy)
-	b = buyer
+	ss, err := s.buyerRepo.CreateBuyer(buy)
 	if err != nil {
 		return b, err
+	}
+	b = Buyer_order{
+		Order_id:     ss.Order_id,
+		Buyer_name:   ss.Buyer_name,
+		Order_status: ss.Order_status,
+		Order_date:   ss.Order_date,
+		Is_active:    ss.Is_active,
 	}
 	return b, nil
 }
 
-func (s buyerServiceDB) UpdateBuyer(buyer Buyer_order) (b Buyer_order, err error) {
-	b = buyer
+func (s buyerServiceDB) UpdateBuyer(buyer Buyer_order) (b *Buyer_order, err error) {
+	b = &buyer
 	bb, err := s.buyerRepo.UpdateBuyer(buyer.Order_id, buyer.Buyer_name, buyer.Order_status, buyer.Order_date, buyer.Is_active)
 	if err != nil {
 		logs.Error(err)
-		return b, err
+		return nil, err
 	}
-	b = Buyer_order{
+	b = &Buyer_order{
 		Order_id:     bb.Order_id,
 		Buyer_name:   bb.Buyer_name,
 		Order_status: bb.Order_status,

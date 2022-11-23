@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"orm/logs"
 
 	"gorm.io/gorm"
@@ -32,16 +33,21 @@ func (r buyerRepo) GetBuyerById(id int) (b *Buyer_order, err error) {
 
 func (r buyerRepo) CreateBuyer(buyer Buyer_order) (b Buyer_order, err error) {
 	tx := r.db.Create(&buyer)
+
 	if tx.Error != nil {
 		logs.Error(err)
 		return b, tx.Error
 	}
-
+	tx = r.db.Limit(1).Order("order_id desc").Find(&buyer)
+	if tx.Error != nil {
+		logs.Error(err)
+		return b, tx.Error
+	}
 	return buyer, nil
 }
 
-func (r buyerRepo) UpdateBuyer(id int, name string, status int, date string, active string) (b Buyer_order, err error) {
-	b = Buyer_order{
+func (r buyerRepo) UpdateBuyer(id int, name string, status int, date string, active string) (b *Buyer_order, err error) {
+	b = &Buyer_order{
 		Order_id:     id,
 		Buyer_name:   name,
 		Order_status: status,
@@ -51,7 +57,10 @@ func (r buyerRepo) UpdateBuyer(id int, name string, status int, date string, act
 	tx := r.db.Model(&Buyer_order{}).Where("order_id", id).Updates(b)
 	if tx.Error != nil {
 		logs.Error(err)
-		return b, tx.Error
+		return nil, tx.Error
+	}
+	if tx.RowsAffected == 0 {
+		return nil, errors.New("invalid order_id")
 	}
 	return b, nil
 }

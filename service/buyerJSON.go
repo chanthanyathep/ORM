@@ -12,6 +12,6 @@ type BuyerService interface {
 	GetBuyers() ([]Buyer_order, error)
 	GetBuyerById(id int) (b *Buyer_order, err error)
 	CreateBuyer(buyer Buyer_order) (b Buyer_order, err error)
-	UpdateBuyer(buyer Buyer_order) (b Buyer_order, err error)
+	UpdateBuyer(buyer Buyer_order) (b *Buyer_order, err error)
 	DeleteBuyer(id int) error
 }
