@@ -1,5 +1,13 @@
 package repository
 
+import (
+	"fmt"
+	"math/rand"
+	"time"
+
+	"gorm.io/gorm"
+)
+
 type Buyer_order struct {
 	Order_id     int    `gorm:"column:order_id;type:int(11)"`
 	Buyer_name   string `gorm:"column:buyer_name;type:varchar(100)"`
@@ -20,18 +28,18 @@ func (Buyer_order) TableName() string {
 	return "buyer_order"
 }
 
-// func mockData(db *gorm.DB) error {
-// 	seed := rand.NewSource(time.Now().UnixNano())
-// 	random := rand.New(seed)
+func mockData(db *gorm.DB) error {
+	seed := rand.NewSource(time.Now().UnixNano())
+	random := rand.New(seed)
 
-// 	buyer := []Buyer_order{}
-// 	for i := 0; i < 5000; i++ {
-// 		buyer = append(buyer, Buyer_order{
-// 			Buyer_name:   fmt.Sprintf("Buyer%v", i+1),
-// 			Order_status: random.Intn(50),
-// 			Order_date:   "2022-11-16",
-// 			Is_active:    "N",
-// 		})
-// 	}
-// 	return db.Create(&buyer).Error
-// }
+	buyer := []Buyer_order{}
+	for i := 0; i < 5000; i++ {
+		buyer = append(buyer, Buyer_order{
+			Buyer_name:   fmt.Sprintf("Buyer%v", i+1),
+			Order_status: random.Intn(50),
+			Order_date:   "2022-11-16",
+			Is_active:    "N",
+		})
+	}
+	return db.Create(&buyer).Error
+}

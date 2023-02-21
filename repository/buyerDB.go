@@ -12,6 +12,8 @@ type buyerRepo struct {
 }
 
 func NewBuyerRepositoryDB(db *gorm.DB) BuyerRepoitory {
+	//db.AutoMigrate(&Buyer_order{})
+	//mockData(db)
 	return buyerRepo{db: db}
 }
 
